@@ -6,8 +6,6 @@
     "name": "Gordon"
   },
   "skills": [
-    "self-evolve",
-    "init-project",
-    "workflow-harness"
+    "./skills/"
   ]
 }
