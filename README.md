@@ -37,17 +37,31 @@
 claude-code-meta/
 ├── README.md                          ← you are here
 ├── .claude-plugin/
-│   └── plugin.json                    ← plugin metadata
-├── skills/
-│   ├── init-project/SKILL.md         ← 7-step bootstrap
+│   ├── plugin.json                    ← plugin metadata
+│   └── marketplace.json               ← marketplace metadata
+├── skills/                            ← 3 lifecycle skills
+│   ├── init-project/SKILL.md         ← 8-step bootstrap (Step 8 installs full harness)
 │   ├── workflow-harness/SKILL.md     ← per-session orchestrator
 │   └── self-evolve/SKILL.md          ← weekly audit + propose updates
-└── templates/
-    ├── ideal-workflow.md             ← baseline (stays in plugin)
-    ├── spec-template.md              ← copied to project on init
-    ├── plan-template.md              ← copied to project on init
-    └── audit-skills.sh               ← copied to project on init
+├── templates/                         ← 4 templates copied to consumer projects
+│   ├── ideal-workflow.md             ← baseline (stays in plugin)
+│   ├── spec-template.md              ← copied to project on init
+│   ├── plan-template.md              ← copied to project on init
+│   └── audit-skills.sh               ← copied to project on init
+└── harness/                           ← self-contained harness layer (new in v0.2.0)
+    ├── CLAUDE.md                      ← plugin repo's own CLAUDE.md
+    ├── rules/                         ← 14 global rules (copied to ~/.claude/rules/common/ on init)
+    │   ├── task-workflow.md
+    │   ├── bug-fixing-discipline.md
+    │   ├── llm-coding-discipline.md
+    │   ├── codegraph-workflow.md
+    │   └── ... (10 more)
+    ├── hooks/                         ← hook definitions (merged into settings.json on init)
+    │   └── codegraph-sync.json
+    └── memory/MEMORY.md               ← plugin's own memory index
 ```
+
+> **Self-contained:** cloning this repo + running `init-project` in any new project = full harness restored (14 rules + hooks + 3 skills + 4 templates). No per-machine setup required beyond `git clone` and `gh auth login`.
 
 ## 🚀 Installation
 
