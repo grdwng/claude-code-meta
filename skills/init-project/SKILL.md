@@ -21,7 +21,7 @@ One-time setup. The birth skill in the lifecycle (**init-project** → harness �
 4. **Create `docs/superpowers/templates/`** by copying `spec-template.md` + `plan-template.md` from this plugin
 5. **Copy `scripts/audit-skills.sh`** from this plugin + make executable
 6. **Verify** `~/.claude/settings.json` has the PostToolUse hook for `codegraph sync` (add it if missing)
-7. **Verify** `~/.claude/rules/common/` has the 4 mandatory skills (using-superpowers, TDD, debugging, verification) — add any missing ones
+7. **Verify** `~/.claude/rules/common/` has the 2 mandatory rule files (`task-workflow.md` and `bug-fixing-discipline.md`) — these are the workflow + debugging rules the harness auto-loads
 
 ## Don't touch
 
