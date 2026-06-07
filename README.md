@@ -96,7 +96,7 @@ Edit `~/.claude/plugins/known_marketplaces.json`:
 
 ```json
 "gordon-claude-code": {
-  "source": {"source": "git", "url": "file://<absolute-path-to-plugin-repo>"},
+  "source": {"source": "github", "repo": "grdwng/claude-code-meta"},
   "installLocation": "/Users/you/.claude/plugins/marketplaces/gordon-claude-code",
   "lastUpdated": "<ISO8601>"
 }
