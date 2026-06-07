@@ -51,31 +51,90 @@ claude-code-meta/
 
 ## 🚀 Installation
 
-### Option 1: Local install (quick test)
+> ⚠️ **There is no "local install" — copying the plugin to your project root does NOT make the skills discoverable.** Claude Code's harness reads `~/.claude/plugins/installed_plugins.json` at session start. You must complete all 4 steps below.
+
+### Step 1: Make the plugin a real git repo
 
 ```bash
-# From your new project root
-cp -r /path/to/claude-code-meta ./
+# Put the plugin somewhere OUTSIDE your project (e.g. ~/claude-code-meta-plugin/)
+mkdir -p ~/claude-code-meta-plugin
+cp -r /path/to/claude-code-meta/. ~/claude-code-meta-plugin/
+cd ~/claude-code-meta-plugin
+git init -q
+git -c user.email="you@local" -c user.name="You" add -A
+git -c user.email="you@local" -c user.name="You" commit -q -m "v0.1.0"
+SHA=$(git rev-parse HEAD)
+echo "Plugin SHA: $SHA"  # ← note this, you need it
 ```
 
-Then in the next Claude session, the skills `gordon-claude-code:init-project`, `gordon-claude-code:workflow-harness`, `gordon-claude-code:self-evolve` should be available.
+### Step 2: Create a marketplace entry
 
-### Option 2: Marketplace install (proper distribution)
+The plugin source needs a `.claude-plugin/marketplace.json` (a separate file from `plugin.json`) listing itself:
 
-1. Push `claude-code-meta/` to a git repo (e.g. `github.com/gordon/claude-code-meta`)
-2. Add the repo URL to `extraKnownMarketplaces` in `~/.claude/settings.json`:
+```json
+{
+  "name": "claude-code-meta",
+  "owner": {"name": "You"},
+  "metadata": {"description": "..."},
+  "plugins": [{
+    "name": "claude-code-meta",
+    "source": "./",
+    "description": "...",
+    "version": "0.1.0"
+  }]
+}
+```
 
-   ```json
-   "extraKnownMarketplaces": {
-     "gordon": {
-       "source": {
-         "source": "github",
-         "repo": "gordon/claude-code-meta"
-       }
-     }
-   }
-   ```
-3. Enable the plugin via Claude Code plugin manager
+### Step 3: Verify the manifest format
+
+- `plugin.json` has `"skills": ["./skills/"]` — **array of paths, not skill names**
+- Each `SKILL.md` frontmatter has `name: <skill-name>` — **no plugin prefix**
+
+### Step 4: Register globally
+
+Edit `~/.claude/plugins/known_marketplaces.json`:
+
+```json
+"gordon-claude-code": {
+  "source": {"source": "git", "url": "file://<absolute-path-to-plugin-repo>"},
+  "installLocation": "/Users/you/.claude/plugins/marketplaces/gordon-claude-code",
+  "lastUpdated": "<ISO8601>"
+}
+```
+
+Edit `~/.claude/plugins/installed_plugins.json`:
+
+```json
+"plugins": {
+  "claude-code-meta@gordon-claude-code": [{
+    "scope": "user",
+    "installPath": "/Users/you/.claude/plugins/cache/gordon-claude-code/claude-code-meta/0.1.0",
+    "version": "0.1.0",
+    "installedAt": "<ISO8601>",
+    "lastUpdated": "<ISO8601>",
+    "gitCommitSha": "<real SHA from Step 1>"
+  }]
+}
+```
+
+Copy the plugin files to the cache:
+
+```bash
+mkdir -p ~/.claude/plugins/cache/gordon-claude-code/claude-code-meta/0.1.0
+cp -r ~/claude-code-meta-plugin/{.claude-plugin,skills,templates,README.md} \
+      ~/.claude/plugins/cache/gordon-claude-code/claude-code-meta/0.1.0/
+```
+
+### Step 5: Verify in a new session
+
+```bash
+cd /path/to/your-project
+claude   # start a NEW session
+# In the session: /plugin   ← should list claude-code-meta
+# Or invoke: claude-code-meta:init-project
+```
+
+> **Why all this?** The harness only reads `installed_plugins.json` at session start. Anything not registered there is invisible. See `memory/plugin-local-install-doesnt-work.md` for the full debugging journey (2026-06-07 smoke test).
 
 ## 📖 Usage
 
@@ -84,7 +143,7 @@ Then in the next Claude session, the skills `gordon-claude-code:init-project`, `
 ```text
 User: "Initialize this new project with the claude-code workflow"
 
-Claude (invokes gordon-claude-code:init-project):
+Claude (invokes claude-code-meta:init-project):
   1. Runs codegraph init -i
   2. Creates CLAUDE.md from template
   3. Creates memory/MEMORY.md
