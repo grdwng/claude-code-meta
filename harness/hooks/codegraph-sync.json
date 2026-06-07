@@ -1,0 +1,9 @@
+{
+  "name": "codegraph-auto-sync",
+  "matcher": "Write|Edit|MultiEdit",
+  "description": "Auto-syncs .codegraph/ index after any JS/TS/Python file edit. Walks up to find the nearest .codegraph/ directory and runs `codegraph sync` against it.",
+  "type": "command",
+  "command": "DIR=$(dirname \"$FILE_PATH\"); while [ \"$DIR\" != \"/\" ] && [ ! -d \"$DIR/.codegraph\" ]; do DIR=$(dirname \"$DIR\"); done; if [ -d \"$DIR/.codegraph\" ]; then (cd \"$DIR\" && codegraph sync 2>&1 | tail -3); fi",
+  "scope": "user",
+  "applies_to": "any project that has a .codegraph/ directory"
+}
