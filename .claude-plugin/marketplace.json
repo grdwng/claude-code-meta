@@ -1,0 +1,27 @@
+{
+  "name": "claude-code-meta",
+  "owner": {
+    "name": "Gordon"
+  },
+  "metadata": {
+    "description": "3-skill lifecycle suite (init-project + workflow-harness + self-evolve) distilled from 01_project's 111-session workflow evolution"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-meta",
+      "source": "./",
+      "description": "Claude Code meta-skills for project setup, workflow enforcement, and self-evolution. Bundles the best practices from 01_project.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Gordon"
+      },
+      "homepage": "https://github.com/gordon/claude-code-meta",
+      "repository": "https://github.com/gordon/claude-code-meta",
+      "license": "MIT",
+      "keywords": ["workflow", "claude-code", "meta", "lifecycle", "self-evolve"],
+      "category": "workflow",
+      "tags": ["init", "harness", "self-evolve", "audit"],
+      "strict": false
+    }
+  ]
+}
