@@ -1,5 +1,5 @@
 ---
-name: gordon-claude-code:init-project
+name: init-project
 description: One-time bootstrap for new Claude Code projects — copy templates from this plugin, init CodeGraph, set up project CLAUDE.md + memory + audit script. Applies the best practices from 01_project.
 ---
 

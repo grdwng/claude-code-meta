@@ -1,5 +1,5 @@
 ---
-name: gordon-claude-code:self-evolve
+name: self-evolve
 description: Periodic self-audit for Claude Code projects — runs audit-skills.sh, compares to ideal-workflow baseline, identifies deviations, proposes rule updates (suggested mode, human reviews before any change)
 ---
 

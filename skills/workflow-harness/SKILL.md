@@ -1,5 +1,5 @@
 ---
-name: gordon-claude-code:workflow-harness
+name: workflow-harness
 description: Workflow orchestrator — enforces 5-stage lifecycle (需求→计划→开发→测试→完成), 4 mandatory skills, CodeGraph trigger points, bug-fixing discipline. Called at the start of every development session.
 ---
 
