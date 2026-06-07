@@ -1,5 +1,5 @@
 ---
-name: init-project
+name: gordon-claude-code:init-project
 description: One-time bootstrap for new Claude Code projects — copy templates from this plugin, init CodeGraph, set up project CLAUDE.md + memory + audit script. Applies the best practices from 01_project.
 ---
 
@@ -37,7 +37,7 @@ The init only creates **project-specific artifacts** + verifies global setup is 
 - `memory/MEMORY.md` (initial structure)
 - `docs/superpowers/templates/{spec,plan}-template.md`
 - `scripts/audit-skills.sh` (executable)
-- Verification report: "global rules OK / hook present / 4 mandatory skills present"
+- Verification report: "global rules OK / hook present / 2 mandatory rule files present"
 - Optional: `docs/superpowers/audits/` (empty dir, ready for self-evolve)
 
 ## Templates sourced from this plugin
