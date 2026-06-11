@@ -1,6 +1,31 @@
 # LLM Coding Discipline
 
-> 4 principles to reduce common LLM coding mistakes. Tradeoff: these bias toward caution over speed. For trivial tasks, use judgment.
+> Core principles (KISS / DRY / YAGNI) + 4 coding disciplines. Bias toward caution over speed. For trivial tasks, use judgment.
+
+## 0. Core Principles
+
+### KISS (Keep It Simple)
+
+- Prefer the simplest solution that actually works
+- Avoid premature optimization
+- Optimize for clarity over cleverness
+- If 200 lines could be 50, rewrite it
+
+### DRY (Don't Repeat Yourself)
+
+- Extract repeated logic into shared functions or utilities
+- Avoid copy-paste implementation drift
+- Introduce abstractions when repetition is real, not speculative
+
+### YAGNI (You Aren't Gonna Need It)
+
+- Do not build features or abstractions before they are needed
+- Avoid speculative generality
+- Start simple, then refactor when the pressure is real
+
+## Immutability (CRITICAL)
+
+ALWAYS create new objects, NEVER mutate existing ones. Rationale: prevents hidden side effects, makes debugging easier, enables safe concurrency.
 
 ## 1. Think Before Coding
 

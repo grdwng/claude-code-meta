@@ -1,58 +1,80 @@
 # Task Workflow (必须遵守)
 
-## 🔴 第一步强制(每次新任务都要做)
+> L0–L5 routing + per-level workflow. Slim core rule (≤120 行). For full dispatcher see `claude-code-meta:dispatch`.
 
-**调 Skill 工具运行 `superpowers:using-superpowers`** —— 让 harness 主动告诉你哪个 skill 适用于本次任务。
+## L0–L5 (estimate then route)
 
-- **不调 = 没走工作流**,即使后面所有步骤都做了也不算合规
-- 不要凭记忆选 skill —— superpowers 套件有 ~40 个 skill,人脑记不全
-- 此举是为了避免 2026-06-07 自查发现的"工具用得勤、skill 用得少"问题
+| Level | Trigger | Workflow |
+|-------|---------|----------|
+| L0 | Question, no imperative | Answer in ≤ 1 paragraph, zero flow |
+| L1 | Trivial, 1 file, no spec | TDD if code, else just do it |
+| L2 | 1–3 files, no schema/dep | TDD, no spec/plan |
+| L3 | 3+ files OR new dep | spec (light) → plan → implement |
+| L4 | 5+ files OR new arch | brainstorm → spec → plan → implement + review |
+| L5 | Vague / ambiguous | brainstorm → spec with `[ASSUMED]` → re-dispatch |
 
-## 🔴 实施阶段强制(开发 + 测试阶段)
+## L2 vs L3 discriminator
 
-**调 Skill 工具运行 `superpowers:test-driven-development`** 或派遣 `tdd-guide` agent —— RED → GREEN → REFACTOR。
+- **L2** stays L2 if: 1-3 files, no schema change, no new dep, no cross-cutting concern
+- **Escalate to L3** if any of: touches 4+ files, needs new dep, schema change, requires test infra changes
 
-- 历史数据(2026-06-07 审计):`test-driven-development` 仅 20 次/111 会话(0.18/会话),TDD 严重不足
-- 直接后果:项目累积 15+ pre-existing 测试失败(mocks.test.js 13 + dictation_bugs.test.js 2)
-- 计划类 skill 用了 134 次(3:1 失衡),导致技术债在实施层堆积
+If unsure, estimate L2 and let mid-flight escalation upgrade.
 
-## 🔴 完成阶段强制(标 done 前必做)
+## Trigger Skills (per L)
 
-**调 Skill 工具运行 `superpowers:verification-before-completion`** —— 真的跑过测试,不是凭感觉。
+| L | Skills (in order) |
+|---|-------------------|
+| L0 | (none — just answer) |
+| L1/L2 | `tdd-guide` → `verification-before-completion` |
+| L3 | `writing-plans` → `executing-plans` → `tdd-guide` → `verification-before-completion` |
+| L4 | `brainstorming` → `writing-plans` → `executing-plans` → `tdd-guide` → `code-review` |
+| L5 | `brainstorming` → spec draft → re-dispatch as L3/L4 |
 
-- 跟 `bug-fixing-discipline.md` 第 2 条 "禁止无验证的已修复" 互锁
-- 历史数据:该 skill 在 111 会话中**使用次数为 0** —— 必须扭转
+For dispatcher logic (estimation rules, override commands, mid-flight) see `claude-code-meta:dispatch`.
+For escalation phrasing and after-escalation actions see `harness/rules/escalation-protocol.md`.
 
----
+## Dispatch Flow
 
-## 每次开始新任务前必须
+1. **Estimate L** from prompt + context (default = L2)
+2. **Override check**: explicit `/L0`..`/L5`, `/no-flow`, `/force-flow` wins
+3. **Route** to the trigger-skill sequence for that L
+4. **Mid-flight**: if reality exceeds L, escalate per `escalation-protocol.md`
 
-1. **检查 memory 中的项目进度**
-   - 读 `memory/MEMORY.md` 和相关进度文件
-   - 展示:当前任务 + 已完成 + 下一步
-2. **用 TaskCreate 创建任务树**
-   - 父任务 = 顶层目标
-   - 子任务 = 可执行的最小单位
-   - `blockedBy` = 标记依赖关系
-3. **按依赖顺序执行,在检查点停下来等确认**
+## Task Tree (TodoWrite / TaskCreate)
 
-## 任务生命周期(每个阶段必须确认才能继续)
+- 父任务 = 顶层目标
+- 子任务 = 可执行的最小单位
+- `blockedBy` = 显式依赖
+- 每个 L3+ 子任务标 in_progress → completed,中间不跳
+- 完成后更新 `memory/MEMORY.md`
 
-```
-需求 → 计划 → 开发 → 测试 → 完成
-```
+## 🔴 Mandatory Skills (per phase, NOT per session)
 
-| 阶段 | 检查点 | 必用 skill |
-|------|--------|----------|
-| 需求 | "这个理解对吗?同意后我写规格文档" | `superpowers:brainstorming`(可选,复杂需求时) |
-| 计划 | "计划这样实现,同意吗?" | `superpowers:writing-plans` 或 `planner` agent |
-| **开发** | "代码写好了,跑一下看看?" | **`superpowers:test-driven-development` 或 `tdd-guide` agent** 🔴 |
-| **测试** | "功能验证通过了吗?" | **`superpowers:verification-before-completion`** 🔴 |
-| 完成 | (更新 memory 自动) | —— |
+| Phase | Required skill | Why |
+|-------|---------------|-----|
+| Start | `using-superpowers` | Pick the right skill, not by memory |
+| Build | `tdd-guide` (L1+) | RED→GREEN→REFACTOR |
+| Pre-done | `verification-before-completion` | No unverified "fixed" |
+| Bug fix | `systematic-debugging` (L2+) | Reproduce→root cause→fix→verify |
 
-## 规则
+Historical discipline gap: TDD only 0.18×/session, verification 0×/session. These are still the top failure modes — invoke them.
 
-- 子任务不完成,父任务不能标记完成
-- 每个检查点停下来等确认,不自动进入下一阶段
-- 完成后更新 memory,记录当前进度
-- 你可以随时问我:「我们进行到哪一步了?」
+## CodeGraph trigger (consult before)
+
+| Action | CodeGraph call |
+|--------|----------------|
+| Refactor / rename / extract | `codegraph_impact` |
+| New feature | `codegraph_files` + `codegraph_search` |
+| Signature change | `codegraph_callers` |
+| Debugging cross-file | `codegraph_callees` |
+| Quality review | `codegraph_complexity minValue=15` |
+
+`.codegraph/` index is auto-synced via PostToolUse hook on every edit — fresh data, no excuse to skip.
+
+## Verification (before any "done")
+
+- [ ] Tests pass (80%+ coverage on new code)
+- [ ] Lint / typecheck clean
+- [ ] No hardcoded secrets
+- [ ] Spec/plan tasks all `completed`
+- [ ] Memory updated if workflow itself changed
