@@ -15,7 +15,10 @@ One-time setup. The birth skill in the lifecycle (**init-project** → harness �
 
 ## What it does (8 steps)
 
-1. **`codegraph init -i`** — build `.codegraph/` index
+1. **Initialize `.codegraph/`** — this step **is** the initialization, do not skip on "directory not found":
+   - Precheck: `command -v codegraph` — if missing, stop and tell the user to install it (`brew install codegraph` or equivalent). Do not proceed to step 2 without the CLI.
+   - If `.codegraph/` does **not** exist in the project root: run `codegraph init -i` to **create** it. (Absence is the trigger, not the skip condition.)
+   - If `.codegraph/` already exists: treat as idempotent — either skip, or run `codegraph index` to refresh. Never delete an existing `.codegraph/` here.
 2. **Create project `CLAUDE.md`** from the 76-line slim template (identity, how-to-run, project structure, key dates, pointers to memory/templates)
 3. **Create `memory/MEMORY.md`** with initial index structure
 4. **Create `docs/superpowers/templates/`** by copying `spec-template.md` + `plan-template.md` from this plugin
