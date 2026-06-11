@@ -1,0 +1,9 @@
+{
+  "name": "userpromptsubmit-route",
+  "matcher": "UserPromptSubmit",
+  "description": "Reads harness/rules/routing-table.md and prints matched keywords for the user's prompt. L0 (interrogative / no imperative) bypasses the table entirely.",
+  "type": "command",
+  "command": "node \"$CLAUDE_PROJECT_DIR/harness/hooks/userpromptsubmit-route.js\"",
+  "scope": "user",
+  "applies_to": "any project using the claude-code-meta plugin (v0.3.0+)"
+}
