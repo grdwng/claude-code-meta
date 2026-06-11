@@ -10,41 +10,11 @@
 
 ---
 
-## Impact 分析
-
-> **必填**。在写 task 之前先跑 `codegraph_impact`,把受影响范围写在每个 task 的 Files 段。
-> 目的:让执行者一眼看清"动 X 会连带动 Y/Z",避免漏改或漏测。
-
-### 整体影响半径
-
-```bash
-mcp__codegraph__codegraph_impact symbol="<entry point>" depth=2
-```
-
-> 输出贴在下方,改完本计划后必须回填。
-
-```
-[粘贴 codegraph_impact 输出]
-```
-
-### 跨文件调用图(关键)
-
-```bash
-mcp__codegraph__codegraph_callers symbol="<要改的函数>" limit=20
-mcp__codegraph__codegraph_callees symbol="<要改的函数>" limit=20
-```
-
-> 输出贴在下方。
-
-```
-[粘贴 callers + callees 输出]
-```
-
----
+<!-- L0-L2: skip below. L3+: fill below. -->
 
 ## File Map
 
-| File | Action | 关联 callers(从 codegraph) | 备注 |
+| File | Action | 关联 callers（从 codegraph） | 备注 |
 |------|--------|------|------|
 | `path/to/X.js:42` | Modify | `funcA(X.js:10)`, `funcB(Y.js:55)` | 改完通知所有 caller |
 | `path/to/new.js` | Create | (none) | 新文件 |
@@ -55,7 +25,7 @@ mcp__codegraph__codegraph_callees symbol="<要改的函数>" limit=20
 
 **Files:**
 - Create / Modify: `path/to/file:line`
-- 关联 callers(必查):`codegraph_callers <symbol>` 已确认范围
+- 关联 callers（必查）：`codegraph_callers <symbol>` 已确认范围
 
 - [ ] **Step 1: ...**
 
@@ -69,7 +39,7 @@ mcp__codegraph__codegraph_callees symbol="<要改的函数>" limit=20
 
 **Files:**
 - Create / Modify: `path/to/file:line`
-- 关联 callers(必查):`codegraph_callers <symbol>` 已确认范围
+- 关联 callers（必查）：`codegraph_callers <symbol>` 已确认范围
 
 - [ ] **Step 1: ...**
 
