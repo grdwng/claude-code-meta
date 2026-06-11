@@ -13,45 +13,6 @@
 
 ---
 
-## CodeGraph 上下文
-
-> **必填**。在写 spec 前跑下面的命令,把输出贴到对应子段。
-> 目的:让 spec 写作者先看清楚代码地图,避免重复造轮子 + 误判模块边界。
-
-### 模块边界
-
-```bash
-mcp__codegraph__codegraph_files path=app/renderer/<module>/
-```
-
-| 子目录/文件 | 职责 | 现有 symbols |
-|------|------|------|
-| `app/renderer/X.js` | ... | N symbols |
-| `app/renderer/Y.js` | ... | N symbols |
-
-### 关键符号清单(可能复用的)
-
-```bash
-mcp__codegraph__codegraph_search query="<feature keyword>"
-```
-
-| 现有符号 | 位置 | 用途 |
-|------|------|------|
-| `existingFunc` | `app/renderer/X.js:42` | 已经做了一半类似的事,可参考 |
-| `anotherHelper` | `app/renderer/Y.js:18` | 工具函数,直接复用 |
-
-### 重名/冲突检查
-
-确认新功能不会和现有符号撞名:
-
-```bash
-mcp__codegraph__codegraph_search query="<new func name>"
-```
-
-[ ] 无冲突,或 [ ] 列出冲突点 + 改名方案
-
----
-
 ## Goals & Non-Goals
 
 ### Goals
@@ -64,9 +25,11 @@ mcp__codegraph__codegraph_search query="<new func name>"
 
 ---
 
+<!-- L0-L2: skip below. L3+: fill below. -->
+
 ## Design
 
-[Architecture, data model, UI/UX, API contract — whatever fits the feature]
+[Architecture, data model, UI/UX, API contract — whatever fits the feature. L0–L2 tasks leave this light; L3+ fills in detail.]
 
 ---
 
