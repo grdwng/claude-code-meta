@@ -13,11 +13,11 @@
 │  claude-code-meta plugin                                     │
 │                                                              │
 │  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐  │
-│  │ init-project   │→ │ workflow-      │→ │ self-evolve    │  │
-│  │ (BIRTH)        │  │ harness        │  │ (GROWTH)       │  │
-│  │                │  │ (LIVING)       │  │                │  │
+│  │ init-project   │→ │ dispatch       │→ │ self-evolve    │  │
+│  │ (BIRTH)        │  │ (LIVING)       │  │ (GROWTH)       │  │
+│  │                │  │                │  │                │  │
 │  │ One-time       │  │ Every session  │  │ Periodic       │  │
-│  │ bootstrap      │  │ orchestrator   │  │ audit          │  │
+│  │ bootstrap      │  │ L0–L5 router   │  │ audit          │  │
 │  └────────────────┘  └────────────────┘  └────────────────┘  │
 │         ↑                       │                │           │
 │         │                       ↓                ↓           │
@@ -40,8 +40,8 @@ claude-code-meta/
 │   ├── plugin.json                    ← plugin metadata
 │   └── marketplace.json               ← marketplace metadata
 ├── skills/                            ← 3 lifecycle skills
-│   ├── init-project/SKILL.md         ← 8-step bootstrap (Step 8 installs full harness)
-│   ├── workflow-harness/SKILL.md     ← per-session orchestrator
+│   ├── init-project/SKILL.md         ← 8-step bootstrap (Step 8 installs slim core)
+│   ├── dispatch/SKILL.md             ← L0–L5 router
 │   └── self-evolve/SKILL.md          ← weekly audit + propose updates
 ├── templates/                         ← 4 templates copied to consumer projects
 │   ├── ideal-workflow.md             ← baseline (stays in plugin)
@@ -50,18 +50,19 @@ claude-code-meta/
 │   └── audit-skills.sh               ← copied to project on init
 └── harness/                           ← self-contained harness layer (new in v0.2.0)
     ├── CLAUDE.md                      ← plugin repo's own CLAUDE.md
-    ├── rules/                         ← 14 global rules (copied to ~/.claude/rules/common/ on init)
-    │   ├── task-workflow.md
-    │   ├── bug-fixing-discipline.md
-    │   ├── llm-coding-discipline.md
-    │   ├── codegraph-workflow.md
-    │   └── ... (10 more)
-    ├── hooks/                         ← hook definitions (merged into settings.json on init)
-    │   └── codegraph-sync.json
+    ├── rules/                         ← 5 slim rules / 253 lines total
+    │   ├── task-workflow.md           ← L0–L5 routing (80)
+    │   ├── routing-table.md           ← keyword → skill (53)
+    │   ├── escalation-protocol.md     ← mid-flight L2→L3 (35)
+    │   ├── llm-coding-discipline.md   (67)
+    │   └── bug-fixing-discipline.md   (18)
+    ├── hooks/                         ← 2 hooks (merged into settings.json on init)
+    │   ├── codegraph-sync.json        ← PostToolUse
+    │   └── userpromptsubmit-route.json ← UserPromptSubmit
     └── memory/MEMORY.md               ← plugin's own memory index
 ```
 
-> **Self-contained:** cloning this repo + running `init-project` in any new project = full harness restored (14 rules + hooks + 3 skills + 4 templates). No per-machine setup required beyond `git clone` and `gh auth login`.
+> **Self-contained:** cloning this repo + running `init-project` in any new project = full harness restored (5 rules / 253 lines + 2 hooks + 3 skills + 4 templates). No per-machine setup required beyond `git clone` and `gh auth login`.
 
 ## 🚀 Installation
 
@@ -164,7 +165,7 @@ Claude (invokes claude-code-meta:init-project):
   4. Copies spec/plan templates
   5. Copies audit-skills.sh
   6. Verifies global PostToolUse hook
-  7. Verifies global rules (4 mandatory skills)
+  7. Verifies slim core (5 rules + 2 hooks)
   → "Project initialized. Ready for development."
 ```
 
@@ -173,10 +174,9 @@ Claude (invokes claude-code-meta:init-project):
 ```text
 User: "I want to add feature X"
 
-Claude (gordon-claude-code:workflow-harness, automatic at session start):
+Claude (claude-code-meta:dispatch, automatic at session start):
   → Calls superpowers:using-superpowers (find right sub-skill)
-  → Routes to writing-plans / brainstorming / TDD as needed
-  → Enforces 5-stage lifecycle (需求→计划→开发→测试→完成)
+  → Routes by L-level (L0 bypass / L1–L2 TDD / L3 spec+plan / L4 brainstorm / L5 re-dispatch)
   → Stops for user confirmation at each checkpoint
 ```
 
@@ -191,23 +191,27 @@ Monday 10:07 AM (cron, set up by init-project):
   → Reports to user
 ```
 
-## 🔴 The 4 mandatory skills (enforced)
+## 🧭 Skill triggering by L-level (v0.3.0)
 
-These 4 skills must be invoked at the specified times. Missing them = non-compliant.
+Skills trigger by routing-level, not blanket enforcement. Cost asymmetry: L0 questions get a direct answer without invoking the superpowers cascade.
 
-| Skill | When | Why |
-|-------|------|-----|
-| `superpowers:using-superpowers` | Every new task start | Find the right sub-skill |
-| `superpowers:test-driven-development` or `tdd-guide` agent | Development stage | RED → GREEN → REFACTOR |
-| `superpowers:systematic-debugging` | Every bug fix | Systematize debugging |
-| `superpowers:verification-before-completion` | Marking done | Real verification, not assumption |
+| L | Trigger | Skills (in order) |
+|---|---------|-------------------|
+| L0 | Question word, no imperative | (none — direct answer) |
+| L1 | 1 file, no spec | `tdd-guide` → `verification-before-completion` |
+| L2 | 1–3 files, no schema/dep | `tdd-guide` → `verification-before-completion` |
+| L3 | 3+ files / new dep | `writing-plans` → `executing-plans` → `tdd-guide` → `verification-before-completion` |
+| L4 | 5+ files / new arch | `brainstorming` → `writing-plans` → `executing-plans` → `tdd-guide` → `code-review` |
+| L5 | Vague / unclear scope | `brainstorming` → spec draft with `[ASSUMED]` → re-dispatch |
+
+Routing table: `harness/rules/routing-table.md`. Dispatcher: `skills/dispatch/SKILL.md`.
 
 ## 🧬 Lifecycle phases
 
 | Phase | Skill | When | Output |
 |-------|-------|------|--------|
 | **Birth** | `init-project` | Once at project start | Project structure + templates + global state verified |
-| **Living** | `workflow-harness` | Every dev session | Correct skills called, 5 checkpoints, 4 mandatory triggers |
+| **Living** | `dispatch` | Every dev session | L0–L5 routing, escalation on L2→L3, slim discipline |
 | **Growth** | `self-evolve` | Weekly + on-demand | Audit report + deviation analysis + suggested rule updates |
 
 The phases are **cyclical**: growth feeds back into living (rules update) and informs future births (new projects get latest version).
@@ -227,10 +231,34 @@ This plugin was extracted from a self-audit session in 01_project. The audit fou
 
 The 4 mandatory skill rules, audit script, and templates were extracted and packaged here. The Monday 10:07 cron (`3adb96d9`) was set up to keep self-evolving.
 
+## 🔄 Migration from v0.2.0
+
+v0.3.0 is a slim-routing refactor. v0.2.0's `workflow-harness` orchestrator and 14-rule context are replaced by an L0–L5 router and 5 slim rules.
+
+| Surface | v0.2.0 | v0.3.0 | Δ |
+|---|---|---|---|
+| Rules in `~/.claude/rules/common/` | 14 files / ~724 lines | 5 files / ≤300 lines | −9 files, −~424 lines |
+| Hooks | 1 (`codegraph-sync`) | 2 (+ `userpromptsubmit-route`) | +1 |
+| Per-session dispatcher | `workflow-harness` skill | `dispatch` skill | replaced |
+| L0 early-bypass | none | question words + no imperative | new |
+| Mid-flight escalation | none | L2 → L3 when ≥4 callers | new |
+| Templates | spec/plan full | spec/plan with `L0-L2 skip` markers | lighter |
+| `task-workflow.md` | 58 lines, no bypass | ≤120 lines, L0–L5 routing table | rewritten |
+| `ideal-workflow.md` | long-form narrative | ≤80 lines, L0–L5 + dispatch reference | rewritten |
+| Backward-compat | — | init-project detects & removes v0.2.0 rules | one-shot |
+
+**3-step upgrade:**
+
+1. **Pull the plugin** — in this repo: `git pull`. For external installs: re-fetch the marketplace version.
+2. **Re-run `init-project` in each consumer project** — it overwrites `~/.claude/rules/common/` with the 5 slim rules and merges the new `userpromptsubmit-route` hook into `settings.json`. The old v0.2.0 rules (9 of them) are detected and removed.
+3. **Restart Claude Code** — so the new `UserPromptSubmit` hook is loaded. Verify with: ask "What does dispatch do?" — should answer directly in ≤5s without invoking the superpowers cascade.
+
+If a project's `~/.claude/rules/common/` still has the 14 old files after step 2, manually `rm` them and re-run `init-project`. The detection is by filename list, not a content heuristic.
+
 ## 📚 Related docs
 
 - `skills/init-project/SKILL.md` — full bootstrap procedure
-- `skills/workflow-harness/SKILL.md` — full routing table + enforced disciplines
+- `skills/dispatch/SKILL.md` — L0–L5 routing + escalation rules
 - `skills/self-evolve/SKILL.md` — full audit procedure + suggested-mode rules
 - `templates/ideal-workflow.md` — the baseline self-evolve compares against
 
@@ -241,4 +269,4 @@ External references (in 01_project's memory):
 
 ## 📋 Version
 
-**0.1.0** (2026-06-07) — initial release
+**0.3.0** (2026-06-11) — slim-routing refactor (L0–L5, dispatch replaces workflow-harness, 5 rules / ≤300 lines)
