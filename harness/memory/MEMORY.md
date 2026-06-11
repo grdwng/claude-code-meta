@@ -8,25 +8,16 @@ _(no memories yet — first lesson to be added when self-evolve's first audit pr
 
 ## Reference: global rules (auto-loaded)
 
-These 14 rules are in `harness/rules/` and copy-installed to `~/.claude/rules/common/` by `init-project` Step 8.
+These 5 slim rules are in `harness/rules/` and copy-installed to `~/.claude/rules/common/` by `init-project` Step 8.
 
 | File | Mandate |
 |------|---------|
-| `task-workflow.md` | 5-stage lifecycle + 4 mandatory skills |
-| `bug-fixing-discipline.md` | 4 铁律 + systematic-debugging |
+| `task-workflow.md` | L0–L5 routing + dispatch + escalation |
+| `routing-table.md` | keyword / extension / directory → skill |
+| `escalation-protocol.md` | mid-flight L2→L3 promotion |
 | `llm-coding-discipline.md` | 4 LLM coding principles |
-| `codegraph-workflow.md` | 5 CodeGraph trigger points |
-| `code-review.md` | Review severity + checklist |
-| `coding-style.md` | KISS/DRY/YAGNI + immutability |
-| `testing.md` | 80% coverage + TDD |
-| `security.md` | Pre-commit security checklist |
-| `performance.md` | Model selection + context mgmt |
-| `patterns.md` | Repository pattern + API envelope |
-| `agents.md` | Multi-agent orchestration |
-| `hooks.md` | PreToolUse/PostToolUse/Stop hooks |
-| `development-workflow.md` | Full feature workflow |
-| `git-workflow.md` | Commit message format |
+| `bug-fixing-discipline.md` | 4 铁律 + systematic-debugging |
 
 ## Last update
 
-2026-06-07 — v0.2.0 self-contained harness launch
+2026-06-11 — v0.3.0 slim-routing refactor (5 rules / 253 lines + dispatch skill)

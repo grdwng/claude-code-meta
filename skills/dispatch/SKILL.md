@@ -1,11 +1,11 @@
 ---
 name: gordon-claude-code:dispatch
-description: L0–L5 workflow dispatcher — reads the user's prompt + context, estimates the level, and routes to the right workflow (zero-flow → spec+plan → full brainstorming). Replaces v0.2.0 `workflow-harness`.
+description: L0–L5 workflow dispatcher — reads the user's prompt + context, estimates the level, and routes to the right workflow (zero-flow → spec+plan → full brainstorming). Routes by estimated complexity (L0–L5).
 ---
 
 # Dispatch
 
-The runtime decision-maker for how much workflow a task deserves. Replaces v0.2.0 `workflow-harness` with a L0–L5 estimator and explicit override commands.
+The runtime decision-maker for how much workflow a task deserves. Provides a L0–L5 estimator and explicit override commands.
 
 ## When to invoke
 

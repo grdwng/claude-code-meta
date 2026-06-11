@@ -68,11 +68,11 @@ The init only creates **project-specific artifacts** + verifies/installs global 
 ## What comes after init
 
 After init completes, the project is ready for:
-- Normal development sessions (workflow-harness skill kicks in)
+- Normal development sessions (dispatch skill kicks in)
 - First self-evolve audit (run within 1-2 weeks to validate baseline)
 - New machine: `git clone` + `claude` + `init-project` = full harness restored
 
 ## References
 
 - Origin: 2026-06-07 self-audit, see `memory/periodic-audit-cadence.md`
-- Companion skills: `self-evolve` (audit cadence), `workflow-harness` (ongoing enforcement)
+- Companion skills: `self-evolve` (audit cadence), `dispatch` (L0–L5 routing)

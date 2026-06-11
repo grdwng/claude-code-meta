@@ -4,14 +4,14 @@
     "name": "Gordon"
   },
   "metadata": {
-    "description": "3-skill lifecycle suite (init-project + workflow-harness + self-evolve) distilled from 01_project's 111-session workflow evolution"
+    "description": "3-skill lifecycle suite (init-project + dispatch + self-evolve) distilled from 01_project's 111-session workflow evolution"
   },
   "plugins": [
     {
       "name": "claude-code-meta",
       "source": "./",
       "description": "Claude Code meta-skills for project setup, workflow enforcement, and self-evolution. Bundles the best practices from 01_project.",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "author": {
         "name": "Gordon"
       },

@@ -1,6 +1,6 @@
 {
   "name": "claude-code-meta",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Claude Code meta-skills for project setup, workflow enforcement, and self-evolution. Bundles the best practices from 01_project.",
   "author": {
     "name": "Gordon"
