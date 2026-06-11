@@ -14,7 +14,7 @@ Periodic self-audit. The growth skill in the lifecycle (init → harness → **s
 - After any major workflow change to compare new baseline against usage
 - After installing new plugins (verify they get used)
 
-## What it does (5 steps)
+## What it does (6 steps)
 
 1. **Run** `bash scripts/audit-skills.sh` → generates `docs/superpowers/audits/audit-YYYY-MM-DD.md`
 2. **Read** `docs/superpowers/ideal-workflow.md` (baseline) + previous audit report (trend)
@@ -23,8 +23,12 @@ Periodic self-audit. The growth skill in the lifecycle (init → harness → **s
    - `test-driven-development` (target ≥ 0.5/session)
    - `systematic-debugging` (target ≥ 0.5/session)
    - `verification-before-completion` (target ≥ 1.0/session)
-4. **Propose** rule updates IF deviation persists 2+ cycles (suggested mode — human reviews before any change)
-5. **Write** findings to `memory/` if new pattern observed + report to user
+4. **routing-table health check** (v0.3.0+): read `harness/rules/routing-table.md`, extract all keywords, cross-reference against `audit-skills.sh` last-30-day hit counts. Report:
+   - **0-hit keywords** (never matched in 30d) — candidates for removal
+   - **over-active keywords** (matched in > 50% of sessions) — too broad, narrow scope
+   - Output as a table: `| keyword | hit-rate | verdict |`
+5. **Propose** rule updates IF deviation persists 2+ cycles (suggested mode — human reviews before any change)
+6. **Write** findings to `memory/` if new pattern observed + report to user
 
 ## Mode: SUGGESTED (not autonomous)
 
