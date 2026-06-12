@@ -35,7 +35,7 @@ The only legitimate skips are: (a) the file/dir is already present **and** up-to
    - Precheck: `command -v codegraph` — if missing, stop and tell the user to install it (`brew install codegraph` or equivalent). Do not proceed to step 2 without the CLI.
    - If `.codegraph/` does **not** exist in the project root: run `codegraph init -i` to **create** it. (Absence is the trigger, not the skip condition.)
    - If `.codegraph/` already exists: treat as idempotent — either skip, or run `codegraph index` to refresh. Never delete an existing `.codegraph/` here.
-2. **Create project `CLAUDE.md`** from the 76-line slim template (identity, how-to-run, project structure, key dates, pointers to memory/templates)
+2. **Create project `CLAUDE.md`** from `templates/CLAUDE.md.template` — the 76-line slim template (identity, quick start, project structure, key dates, pointers to memory/templates)
 3. **Create `memory/MEMORY.md`** with initial index structure (`mkdir -p memory/` if absent)
 4. **Create `docs/superpowers/templates/`** by copying `spec-template.md` + `plan-template.md` from this plugin (`mkdir -p` the target dir if absent)
 5. **Copy `scripts/audit-skills.sh`** from this plugin + make executable (`mkdir -p scripts/` if absent)
@@ -80,6 +80,7 @@ The init only creates **project-specific artifacts** + verifies/installs global 
 ## Templates sourced from this plugin
 
 - `templates/ideal-workflow.md` → stays in plugin (baseline for self-evolve)
+- `templates/CLAUDE.md.template` → copied to project root as `CLAUDE.md`
 - `templates/spec-template.md` → copied to project's `docs/superpowers/templates/`
 - `templates/plan-template.md` → copied to project's `docs/superpowers/templates/`
 - `templates/audit-skills.sh` → copied to project's `scripts/`
