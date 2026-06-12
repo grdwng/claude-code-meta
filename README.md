@@ -270,6 +270,8 @@ External references (in 01_project's memory):
 
 ## 📋 Version
 
+**0.3.2** (2026-06-12) — adds 5th Stop hook trigger (warn on multi-step sessions without TaskCreate) + `.gitignore` for runtime artifacts
+
 **0.3.1** (2026-06-12) — quality-discipline enforcement (Stop hook warns when mandatory skills not invoked; mandatory skills use full plugin-prefixed names)
 
 **0.3.0** (2026-06-11) — slim-routing refactor (L0–L5, dispatch replaces workflow-harness, 5 rules / ≤300 lines)

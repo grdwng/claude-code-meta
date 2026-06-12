@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.3.2 (2026-06-12) — TaskCreate enforcement + .gitignore
+
+**Added:**
+- 5th Stop hook trigger: warn on multi-step sessions (≥ 3 edits OR ≥ 8 tool calls) that didn't invoke `TaskCreate`/`TaskUpdate` (L3+ task tree tracking is mandatory)
+- `task-workflow.md` Enforcement table: new row referencing the existing "Task Tree" section
+
+**Changed:**
+- `harness/hooks/quality-discipline-stop.js` taskListInUse check uses TaskCreate OR TaskUpdate
+
 ## v0.3.1 (2026-06-12) — Quality-discipline enforcement
 
 **Added:**
@@ -19,6 +28,9 @@
 
 **Deferred to v0.4.x:**
 - Wrapper-layer (SkillC) for in-session force-invocation of mandatory skills
+
+**v0.3.1 patch (also included in v0.3.2):**
+- `.gitignore` excludes `.codegraph/` (regenerable) and `.claude/memory/` (local session state)
 
 ## v0.3.0 (2026-06-11) — Slim dispatch architecture
 
