@@ -56,13 +56,14 @@ claude-code-meta/
     │   ├── escalation-protocol.md     ← mid-flight L2→L3 (35)
     │   ├── llm-coding-discipline.md   (67)
     │   └── bug-fixing-discipline.md   (18)
-    ├── hooks/                         ← 2 hooks (merged into settings.json on init)
+    ├── hooks/                         ← 3 hooks (merged into settings.json on init)
     │   ├── codegraph-sync.json        ← PostToolUse
-    │   └── userpromptsubmit-route.json ← UserPromptSubmit
+    │   ├── userpromptsubmit-route.json ← UserPromptSubmit
+    │   └── quality-discipline-stop.json ← Stop (warn-only, v0.3.1+)
     └── memory/MEMORY.md               ← plugin's own memory index
 ```
 
-> **Self-contained:** cloning this repo + running `init-project` in any new project = full harness restored (5 rules / 253 lines + 2 hooks + 3 skills + 4 templates). No per-machine setup required beyond `git clone` and `gh auth login`.
+> **Self-contained:** cloning this repo + running `init-project` in any new project = full harness restored (5 rules / 253 lines + 3 hooks + 3 skills + 4 templates). No per-machine setup required beyond `git clone` and `gh auth login`.
 
 ## 🚀 Installation
 
@@ -165,7 +166,7 @@ Claude (invokes claude-code-meta:init-project):
   4. Copies spec/plan templates
   5. Copies audit-skills.sh
   6. Verifies global PostToolUse hook
-  7. Verifies slim core (5 rules + 2 hooks)
+  7. Verifies slim core (5 rules + 3 hooks)
   → "Project initialized. Ready for development."
 ```
 
@@ -191,18 +192,18 @@ Monday 10:07 AM (cron, set up by init-project):
   → Reports to user
 ```
 
-## 🧭 Skill triggering by L-level (v0.3.0)
+## 🧭 Skill triggering by L-level (v0.3.1)
 
 Skills trigger by routing-level, not blanket enforcement. Cost asymmetry: L0 questions get a direct answer without invoking the superpowers cascade.
 
 | L | Trigger | Skills (in order) |
 |---|---------|-------------------|
 | L0 | Question word, no imperative | (none — direct answer) |
-| L1 | 1 file, no spec | `tdd-guide` → `verification-before-completion` |
-| L2 | 1–3 files, no schema/dep | `tdd-guide` → `verification-before-completion` |
-| L3 | 3+ files / new dep | `writing-plans` → `executing-plans` → `tdd-guide` → `verification-before-completion` |
-| L4 | 5+ files / new arch | `brainstorming` → `writing-plans` → `executing-plans` → `tdd-guide` → `code-review` |
-| L5 | Vague / unclear scope | `brainstorming` → spec draft with `[ASSUMED]` → re-dispatch |
+| L1 | 1 file, no spec | `superpowers:test-driven-development` → `superpowers:verification-before-completion` |
+| L2 | 1–3 files, no schema/dep | `superpowers:test-driven-development` → `superpowers:verification-before-completion` |
+| L3 | 3+ files / new dep | `superpowers:writing-plans` → `superpowers:executing-plans` → `superpowers:test-driven-development` → `superpowers:verification-before-completion` |
+| L4 | 5+ files / new arch | `superpowers:brainstorming` → `superpowers:writing-plans` → `superpowers:executing-plans` → `superpowers:test-driven-development` → `code-review` |
+| L5 | Vague / unclear scope | `superpowers:brainstorming` → spec draft with `[ASSUMED]` → re-dispatch |
 
 Routing table: `harness/rules/routing-table.md`. Dispatcher: `skills/dispatch/SKILL.md`.
 
@@ -268,5 +269,7 @@ External references (in 01_project's memory):
 - `memory/superpowers-skill-discipline.md` — why using-superpowers must be first
 
 ## 📋 Version
+
+**0.3.1** (2026-06-12) — quality-discipline enforcement (Stop hook warns when mandatory skills not invoked; mandatory skills use full plugin-prefixed names)
 
 **0.3.0** (2026-06-11) — slim-routing refactor (L0–L5, dispatch replaces workflow-harness, 5 rules / ≤300 lines)

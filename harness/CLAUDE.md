@@ -1,7 +1,7 @@
 # claude-code-meta
 
 **Last updated:** 2026-06-11
-**Version:** v0.3.0 (slim dispatch architecture)
+**Version:** v0.3.1 (slim dispatch architecture + quality-discipline enforcement)
 
 > Plugin repo for `claude-code-meta` — distributes a 3-skill dispatch suite + 5 slim global rules + 2 hooks that route prompts to the right level of work.
 
@@ -14,13 +14,13 @@
 
 ## What this repo is
 
-A **slim dispatch Claude Code harness** (v0.3.0; down from 14 rules / 724 lines in v0.2.0).
+A **slim dispatch Claude Code harness** (v0.3.1; down from 14 rules / 724 lines in v0.2.0).
 
 | Layer | Content | Purpose |
 |-------|---------|---------|
 | **Plugin** | `.claude-plugin/`, `skills/`, `templates/` | 3 skills + templates consumers install |
 | **Slim rules** | `harness/rules/*.md` (5 files, 253 lines) | L0-L5 routing + discipline; auto-loaded |
-| **Hooks** | `harness/hooks/*.json` (2 files) | `codegraph-sync` (PostToolUse) + `userpromptsubmit-route` (UserPromptSubmit) |
+| **Hooks** | `harness/hooks/*.json` (3 files) | `codegraph-sync` (PostToolUse) + `userpromptsubmit-route` (UserPromptSubmit) + `quality-discipline-stop` (Stop, v0.3.1+) |
 | **Plugin's own dev** | `harness/CLAUDE.md`, `harness/memory/` | Lets this repo use its own workflow |
 
 **Why slim?** Routing table → dispatcher → right skill (L0 bypass / L1-L2 TDD / L3 spec+plan / L4 brainstorm / L5 re-dispatch). Cost asymmetry: cheap L0 questions don't trigger the full superpowers cascade.
@@ -77,12 +77,12 @@ claude-code-meta/
 │   │   ├── escalation-protocol.md ← mid-flight L2→L3 (35)
 │   │   ├── llm-coding-discipline.md (67)
 │   │   └── bug-fixing-discipline.md (18)
-│   ├── hooks/                     ← 2 hook definitions
+│   ├── hooks/                     ← 3 hook definitions
 │   │   ├── codegraph-sync.json
 │   │   └── userpromptsubmit-route.json
 │   └── memory/                    ← plugin's own memory
 ├── README.md                      ← user-facing + Migration section
-└── CHANGELOG.md                   ← v0.3.0 entry
+└── CHANGELOG.md                   ← v0.3.0 + v0.3.1 entries
 ```
 
 ## Versioning + release

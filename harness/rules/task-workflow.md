@@ -25,10 +25,10 @@ If unsure, estimate L2 and let mid-flight escalation upgrade.
 | L | Skills (in order) |
 |---|-------------------|
 | L0 | (none — just answer) |
-| L1/L2 | `tdd-guide` → `verification-before-completion` |
-| L3 | `writing-plans` → `executing-plans` → `tdd-guide` → `verification-before-completion` |
-| L4 | `brainstorming` → `writing-plans` → `executing-plans` → `tdd-guide` → `code-review` |
-| L5 | `brainstorming` → spec draft → re-dispatch as L3/L4 |
+| L1/L2 | `superpowers:test-driven-development` → `superpowers:verification-before-completion` |
+| L3 | `superpowers:writing-plans` → `superpowers:executing-plans` → `superpowers:test-driven-development` → `superpowers:verification-before-completion` |
+| L4 | `superpowers:brainstorming` → `superpowers:writing-plans` → `superpowers:executing-plans` → `superpowers:test-driven-development` → `code-review` |
+| L5 | `superpowers:brainstorming` → spec draft → re-dispatch as L3/L4 |
 
 For dispatcher logic (estimation rules, override commands, mid-flight) see `claude-code-meta:dispatch`.
 For escalation phrasing and after-escalation actions see `harness/rules/escalation-protocol.md`.
@@ -57,7 +57,18 @@ For escalation phrasing and after-escalation actions see `harness/rules/escalati
 | Pre-done | `verification-before-completion` | No unverified "fixed" |
 | Bug fix | `systematic-debugging` (L2+) | Reproduce→root cause→fix→verify |
 
-Historical discipline gap: TDD only 0.18×/session, verification 0×/session. These are still the top failure modes — invoke them.
+## 🔴 Enforcement (per-session)
+
+The skills above are **MANDATORY**, not optional. Historical invoke rates (0.18× TDD, 0.16× debug, **0× verify**) confirm advisory wording fails — the Stop hook `harness/hooks/quality-discipline-stop.{json,js}` inspects each session's transcript at session-end and warns if a session completed without invoking the skill its trigger condition required.
+
+| Trigger (in transcript) | Required skill | Why |
+|---|---|---|
+| Session has ≥ 5 tool calls | `superpowers:using-superpowers` | Pick right skill from start, not by memory |
+| ≥ 1 code-file edit (`.ts`/`.py`/`.go`/...) | `superpowers:test-driven-development` | RED→GREEN→REFACTOR; unverified code = #1 failure |
+| ≥ 1 edit (any kind) | `superpowers:verification-before-completion` | No unverified "done" |
+| Bug keywords + ≥ 1 edit | `superpowers:systematic-debugging` | Reproduce→root cause→fix→verify |
+
+**Warn-only.** The hook exits 0 always — informs, doesn't gatekeep. If a session legitimately doesn't need a skill, the warning is a nudge to consider why, not an override.
 
 ## CodeGraph trigger (consult before)
 

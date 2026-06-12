@@ -41,7 +41,7 @@ The only legitimate skips are: (a) the file/dir is already present **and** up-to
 5. **Copy `scripts/audit-skills.sh`** from this plugin + make executable (`mkdir -p scripts/` if absent)
 6. **Verify** `~/.claude/settings.json` has the PostToolUse hook for `codegraph sync` (add it if missing)
 7. **Verify** `~/.claude/rules/common/` has the 2 mandatory rule files (`task-workflow.md` and `bug-fixing-discipline.md`) — these are the workflow + debugging rules the harness auto-loads (`mkdir -p ~/.claude/rules/common/` if absent)
-8. **Install slim core harness** (v0.3.0, replaces v0.2.0's 14-rule full copy):
+8. **Install slim core harness** (v0.3.1, replaces v0.2.0's 14-rule full copy):
    - Copy `harness/rules/task-workflow.md` to `~/.claude/rules/common/`
    - Copy `harness/rules/llm-coding-discipline.md` to `~/.claude/rules/common/`
    - Copy `harness/rules/bug-fixing-discipline.md` to `~/.claude/rules/common/`
@@ -49,6 +49,7 @@ The only legitimate skips are: (a) the file/dir is already present **and** up-to
    - Copy `harness/rules/escalation-protocol.md` to `~/.claude/rules/common/`
    - Merge `harness/hooks/codegraph-sync.json` into `~/.claude/settings.json` (PostToolUse)
    - Merge `harness/hooks/userpromptsubmit-route.json` into `~/.claude/settings.json` (UserPromptSubmit)
+   - Merge `harness/hooks/quality-discipline-stop.json` into `~/.claude/settings.json` (Stop)
    - **Migration from v0.2.0**: detect any of the 11 v0.2.0 rules in `~/.claude/rules/common/` and remove them — `development-workflow.md`, `codegraph-workflow.md`, `coding-style.md`, `git-workflow.md`, `hooks.md`, `testing.md`, `performance.md`, `patterns.md`, `security.md`, `code-review.md`, `agents.md`
    - Skip any Copy/Merge if a file with the same name is already up-to-date (idempotent)
 
@@ -67,14 +68,14 @@ The init only creates **project-specific artifacts** + verifies/installs global 
 - `docs/superpowers/templates/{spec,plan}-template.md`
 - `scripts/audit-skills.sh` (executable)
 - `~/.claude/rules/common/` populated with 5 slim rules (Step 8)
-- `~/.claude/settings.json` updated with 2 harness hooks (Step 8)
-- Verification report: "slim core installed (5/5 rules) / 2 hooks merged / v0.2.0 stale rules purged (if any)"
+- `~/.claude/settings.json` updated with 3 harness hooks (Step 8)
+- Verification report: "slim core installed (5/5 rules) / 3 hooks merged / v0.2.0 stale rules purged (if any)"
 - Optional: `docs/superpowers/audits/` (empty dir, ready for self-evolve)
 
-## Harness sources (v0.3.0 slim core)
+## Harness sources (v0.3.1 slim core)
 
 - `harness/rules/{task-workflow,llm-coding-discipline,bug-fixing-discipline,routing-table,escalation-protocol}.md` → copied to `~/.claude/rules/common/`
-- `harness/hooks/{codegraph-sync,userpromptsubmit-route}.json` → merged into `~/.claude/settings.json` (idempotent by hook name)
+- `harness/hooks/{codegraph-sync,userpromptsubmit-route,quality-discipline-stop}.json` → merged into `~/.claude/settings.json` (idempotent by hook name)
 - `harness/CLAUDE.md` → used by the plugin repo itself (not copied to consumer projects)
 
 ## Templates sourced from this plugin
