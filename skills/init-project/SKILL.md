@@ -13,6 +13,14 @@ One-time setup. The birth skill in the lifecycle (**init-project** → harness �
 - User says "set up this repo for Claude Code" / "apply 01_project workflow to X"
 - User wants the standard workflow harness + self-evolve from day 1
 
+## Self-application guard
+
+If `skills/init-project/SKILL.md` exists relative to the cwd (i.e., the skill is running inside its own plugin source repo — the `claude-code-meta` project), **abort immediately** with:
+
+> "This is the meta project that hosts init-project. Re-running init here would overwrite the plugin's own files (CLAUDE.md, memory/, scripts/, templates/) with the templates it ships, and could also rewrite `~/.claude/rules/common/` and `~/.claude/settings.json` based on rules/hooks the meta project itself depends on. Use init-project on **other** projects only."
+
+This is not a hypothetical: Steps 2-5 have no idempotent skip for already-present files, so a self-run would silently overwrite the meta project's own artifacts. Step 8's v0.2.0→v0.3.0 migration could also delete rules the meta project still references.
+
 ## Directory creation policy
 
 **Absence is the trigger, not the skip condition.** Every step below writes to a path that may not exist yet on a fresh project. If a parent directory is missing, **`mkdir -p` it and continue** — do not treat "directory not found" as a reason to skip the step.
