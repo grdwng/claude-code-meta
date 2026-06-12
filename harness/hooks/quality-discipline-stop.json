@@ -1,0 +1,8 @@
+{
+  "name": "quality-discipline-stop",
+  "matcher": "Stop",
+  "description": "Reads transcript_path from stdin JSON, greps for 4 mandatory skill invocations + code-edit/bug-keyword signals, warns on stderr if any mandatory skill was skipped. Warn-only (exit 0).",
+  "type": "command",
+  "command": "node \"$CLAUDE_PROJECT_DIR/harness/hooks/quality-discipline-stop.js\"",
+  "applies_to": "any project using the claude-code-meta plugin (v0.3.1+)"
+}
