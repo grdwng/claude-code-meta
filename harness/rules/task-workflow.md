@@ -67,6 +67,7 @@ The skills above are **MANDATORY**, not optional. Historical invoke rates (0.18�
 | ≥ 1 code-file edit (`.ts`/`.py`/`.go`/...) | `superpowers:test-driven-development` | RED→GREEN→REFACTOR; unverified code = #1 failure |
 | ≥ 1 edit (any kind) | `superpowers:verification-before-completion` | No unverified "done" |
 | Bug keywords + ≥ 1 edit | `superpowers:systematic-debugging` | Reproduce→root cause→fix→verify |
+| Multi-step task (≥ 3 edits OR ≥ 8 tool calls) | `TaskCreate` (L3+) | Track progress; see "Task Tree" section below |
 
 **Warn-only.** The hook exits 0 always — informs, doesn't gatekeep. If a session legitimately doesn't need a skill, the warning is a nudge to consider why, not an override.
 

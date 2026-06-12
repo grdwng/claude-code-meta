@@ -9,6 +9,7 @@
 const fs = require('fs');
 
 const RULE_REF = 'harness/rules/task-workflow.md "🔴 Enforcement"';
+const TASK_RULE_REF = 'harness/rules/task-workflow.md "Task Tree"';
 const CODE_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|py|go|rs|rb|java|kt|swift|c|cpp|h|hpp|cs|php|sh|sql)$/i;
 const BUG_KW = /\b(bug|broken|failing|crash)\b/i;
 
@@ -81,6 +82,11 @@ function main(payload) {
   // Bug keywords — first 5KB only (avoid false positives from error messages / stack traces)
   const bugKeywords = BUG_KW.test(content.slice(0, 5000));
 
+  // Multi-step task detection + TaskCreate invocation count
+  const taskCreateInvocations = (content.match(/"name":"TaskCreate"/g) || []).length;
+  const taskUpdateInvocations = (content.match(/"name":"TaskUpdate"/g) || []).length;
+  const multiStepTask = totalEdits >= 3 || totalToolCalls >= 8;
+
   // Build warning list
   const warnings = [];
 
@@ -109,6 +115,15 @@ function main(payload) {
     warnings.push({
       skill: 'superpowers:systematic-debugging',
       why: 'bug-related keywords + edits detected but no systematic-debugging invocation'
+    });
+  }
+
+  // 5. TaskCreate (L3+) — track progress on multi-step tasks via TaskCreate/TaskUpdate
+  const taskListInUse = taskCreateInvocations > 0 || taskUpdateInvocations > 0;
+  if (multiStepTask && !taskListInUse) {
+    warnings.push({
+      skill: 'TaskCreate (task tree)',
+      why: totalEdits + ' edits / ' + totalToolCalls + ' tool calls suggest a multi-step task; TaskCreate tracking is mandatory at L3+ (rule: ' + TASK_RULE_REF + ')'
     });
   }
 
