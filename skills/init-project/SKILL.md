@@ -13,6 +13,14 @@ One-time setup. The birth skill in the lifecycle (**init-project** → harness �
 - User says "set up this repo for Claude Code" / "apply 01_project workflow to X"
 - User wants the standard workflow harness + self-evolve from day 1
 
+## Directory creation policy
+
+**Absence is the trigger, not the skip condition.** Every step below writes to a path that may not exist yet on a fresh project. If a parent directory is missing, **`mkdir -p` it and continue** — do not treat "directory not found" as a reason to skip the step.
+
+Folders this skill creates on demand when absent: `.codegraph/` (via `codegraph init`), `memory/`, `docs/superpowers/templates/`, `docs/superpowers/audits/`, `scripts/`, `~/.claude/rules/common/`. Existence is checked; absence is created.
+
+The only legitimate skips are: (a) the file/dir is already present **and** up-to-date, or (b) a required precondition fails (e.g., `codegraph` CLI missing → stop and prompt install).
+
 ## What it does (8 steps)
 
 1. **Initialize `.codegraph/`** — this step **is** the initialization, do not skip on "directory not found":
@@ -20,11 +28,11 @@ One-time setup. The birth skill in the lifecycle (**init-project** → harness �
    - If `.codegraph/` does **not** exist in the project root: run `codegraph init -i` to **create** it. (Absence is the trigger, not the skip condition.)
    - If `.codegraph/` already exists: treat as idempotent — either skip, or run `codegraph index` to refresh. Never delete an existing `.codegraph/` here.
 2. **Create project `CLAUDE.md`** from the 76-line slim template (identity, how-to-run, project structure, key dates, pointers to memory/templates)
-3. **Create `memory/MEMORY.md`** with initial index structure
-4. **Create `docs/superpowers/templates/`** by copying `spec-template.md` + `plan-template.md` from this plugin
-5. **Copy `scripts/audit-skills.sh`** from this plugin + make executable
+3. **Create `memory/MEMORY.md`** with initial index structure (`mkdir -p memory/` if absent)
+4. **Create `docs/superpowers/templates/`** by copying `spec-template.md` + `plan-template.md` from this plugin (`mkdir -p` the target dir if absent)
+5. **Copy `scripts/audit-skills.sh`** from this plugin + make executable (`mkdir -p scripts/` if absent)
 6. **Verify** `~/.claude/settings.json` has the PostToolUse hook for `codegraph sync` (add it if missing)
-7. **Verify** `~/.claude/rules/common/` has the 2 mandatory rule files (`task-workflow.md` and `bug-fixing-discipline.md`) — these are the workflow + debugging rules the harness auto-loads
+7. **Verify** `~/.claude/rules/common/` has the 2 mandatory rule files (`task-workflow.md` and `bug-fixing-discipline.md`) — these are the workflow + debugging rules the harness auto-loads (`mkdir -p ~/.claude/rules/common/` if absent)
 8. **Install slim core harness** (v0.3.0, replaces v0.2.0's 14-rule full copy):
    - Copy `harness/rules/task-workflow.md` to `~/.claude/rules/common/`
    - Copy `harness/rules/llm-coding-discipline.md` to `~/.claude/rules/common/`
