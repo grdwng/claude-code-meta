@@ -1,0 +1,74 @@
+# <Project Name>
+
+**Last updated:** YYYY-MM-DD
+**Status:** Active / Maintenance / Archived
+
+> One-paragraph project description. What it does, who it is for, and the problem it solves.
+
+## Quick start
+
+```bash
+# clone + install + run — concrete commands a new contributor can copy-paste
+git clone <repo-url>
+cd <project>
+<install-command>
+<run-command>
+```
+
+## Project structure
+
+```
+project-root/
+├── src/                          ← main code
+├── tests/                        ← test suite
+├── docs/                         ← design + usage docs
+├── memory/
+│   └── MEMORY.md                 ← project memory index (start here)
+└── docs/superpowers/
+    ├── specs/                    ← L3+ feature designs
+    ├── plans/                    ← L3+ execution plans
+    ├── audits/                   ← weekly self-evolve audits
+    └── templates/                ← spec/plan templates (copied by init-project)
+```
+
+## Key dates
+
+- **YYYY-MM-DD**: project bootstrapped via `claude-code-meta:init-project`
+- **YYYY-MM-DD**: <first milestone>
+- **YYYY-MM-DD**: <latest milestone>
+
+## Pointers
+
+- **Memory index**: `memory/MEMORY.md` — start here for project-specific notes
+- **Feature specs**: `docs/superpowers/specs/` — L3+ designs
+- **Implementation plans**: `docs/superpowers/plans/` — L3+ execution
+- **Audit cadence**: run `./scripts/audit-skills.sh` weekly (see `self-evolve` skill)
+
+## How to develop
+
+```bash
+# Bootstrap (one-time, on a fresh clone)
+claude-code-meta:init-project
+
+# Daily workflow — dispatch skill auto-routes your prompt
+# L0 → codegraph-first lookup, answer in ≤ 1 paragraph
+# L1/L2 → tdd-guide → implement → verification-before-completion
+# L3 → writing-plans → executing-plans → tdd-guide → verify
+# L4 → brainstorming → writing-plans → executing-plans → tdd-guide → code-review
+
+# Weekly self-evolve
+claude-code-meta:self-evolve
+```
+
+## Versioning
+
+- **Semver**: `vMAJOR.MINOR.PATCH`
+- **MAJOR**: breaking API/contract changes
+- **MINOR**: backward-compatible features
+- **PATCH**: bug fixes, wording
+
+## References
+
+- Plugin: [claude-code-meta](https://github.com/grdwng/claude-code-meta)
+- Dispatch flow: `~/.claude/rules/common/task-workflow.md` (auto-loaded)
+- Migration from v0.2.0: see plugin README
