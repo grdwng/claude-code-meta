@@ -1,0 +1,5 @@
+# CodeGraph local index (regenerate via `codegraph init -i`)
+.codegraph/
+
+# Claude Code local session memory
+.claude/memory/
